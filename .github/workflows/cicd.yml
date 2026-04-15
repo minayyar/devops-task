@@ -8,7 +8,8 @@ on:
 jobs:
   infra:
     runs-on: ubuntu-latest
-
+    outputs:
+      vm_ip: ${{ steps.get_ip.outputs.vm_ip }}
     steps:
       - uses: actions/checkout@v4
 
