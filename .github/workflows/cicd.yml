@@ -64,7 +64,7 @@ jobs:
         run: |
           ssh ubuntu@${{ env.VM_IP }} << 'EOF'
             if [ ! -d ~/app/.git ]; then
-              git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git ~/app
+              git clone https://${{ secrets.GH_USERNAME }}:${{ secrets.GH_TOKEN }}@github.com/minayyar/devops-task.git ~/app
             fi
 
             cd ~/app
