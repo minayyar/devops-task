@@ -1,0 +1,75 @@
+name: Full CI/CD (Terraform + Deploy)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  infra:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: Authenticate GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Terraform Init
+        run: terraform init -reconfigure
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+        env:
+          TF_VAR_project_id: ${{ secrets.GCP_PROJECT_ID }}
+          TF_VAR_my_ip: ${{ secrets.MY_IP }}
+          TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: infra
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install deps
+        working-directory: app
+        run: npm install
+
+      - name: Test
+        working-directory: app
+        run: npm test
+
+      - name: Get VM IP
+        run: echo "VM_IP=$(terraform output -raw vm_ip)" >> $GITHUB_ENV
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ env.VM_IP }} >> ~/.ssh/known_hosts
+
+      - name: Deploy via Git Pull
+        run: |
+          ssh ubuntu@${{ env.VM_IP }} << 'EOF'
+            if [ ! -d ~/app/.git ]; then
+              git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git ~/app
+            fi
+
+            cd ~/app
+            git pull origin main
+
+            npm install
+            pm2 stop devops-app || true
+            pm2 start server.js --name devops-app
+            pm2 save
+          EOF
