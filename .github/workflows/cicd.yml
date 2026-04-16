@@ -86,4 +86,9 @@ jobs:
             pm2 stop devops-app || true
             pm2 start server.js --name devops-app
             pm2 save
+            sudo cp ~/app/nginx/default.conf /etc/nginx/sites-available/default
+
+            sudo nginx -t
+
+            sudo systemctl reload nginx
           EOF
