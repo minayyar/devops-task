@@ -80,7 +80,7 @@ resource "google_compute_firewall" "allow_ssh" {
     ports    = ["22"]
   }
 
-  source_ranges = [var.my_ip]
+  source_ranges = ["0.0.0.0/0"]
 }
 
 # -------------------------
