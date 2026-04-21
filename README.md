@@ -82,4 +82,4 @@ This project demonstrates a complete DevOps lifecycle:
 ---
 
 ## 👨‍💻 Author
-Muhammad Jamal Nasir
+Majid Iqbal Nayyar
