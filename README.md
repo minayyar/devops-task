@@ -51,25 +51,25 @@ This project demonstrates a complete DevOps lifecycle:
 # 📸 Screenshots
 
 ## CI/CD Pipeline
-![CI/CD](cicd-summary.png)
+![CI/CD](images/cicd-summary.png)
 
 ## Infra Logs
-![Infra](infra-logs.png)
+![Infra](images/infra-logs.png)
 
 ## Deploy Logs
-![Deploy](deploy-logs.png)
+![Deploy](images/deploy-logs.png)
 
 ## Grafana Dashboards
-![Grafana](grafana-dashboards.png)
+![Grafana](images/grafana-dashboards.png)
 
 ## Loki Logs
-![Loki](loki-logs.png)
+![Loki](images/loki-logs.png)
 
 ## cAdvisor Metrics
-![cAdvisor](cadvisor.png)
+![cAdvisor](images/cadvisor.png)
 
 ## Application Output
-![App](app.png)
+![App](images/app.png)
 
 ---
 
